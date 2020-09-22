@@ -1,7 +1,7 @@
 package digester;
 /**
  *
- * @author MAZ
+ * @author rabiixx
  */
 
 import java.io.File;
@@ -13,16 +13,13 @@ import java.security.NoSuchAlgorithmException;
 
 public final class DigesterTest {
   
-  private static
-  String toHex (final byte[] bytes) {
-
-    final BigInteger x = new BigInteger(1, bytes);
-    return String.format("%0" + (bytes.length << 1) + "x", x);
-  }
+    private static String toHex (final byte[] bytes) {
+        final BigInteger x = new BigInteger(1, bytes);
+        return String.format("%0" + (bytes.length << 1) + "x", x);
+    }
   
-  public static
-  void main (final String[] args)
-          throws FileNotFoundException, IOException, NoSuchAlgorithmException {
+    public static void main (final String[] args) 
+        throws FileNotFoundException, IOException, NoSuchAlgorithmException {
         
     final Digester d0 = new Digester("MD5");
     final Digester d1 = new Digester("SHA-1");

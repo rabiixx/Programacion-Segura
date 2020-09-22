@@ -1,17 +1,14 @@
 package digester;
 /**
  *
- * @author MAZ
+ * @author rabiixx
  */
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,11 +20,15 @@ public final class Digester {
     private final MessageDigest md;
 
     public Digester (final String algorithm) throws NoSuchAlgorithmException {
-        md = MessageDigest.getInstance( algorithm );
         
+        try {
+            md = MessageDigest.getInstance( algorithm );
+        } catch ( final NoSuchAlgorithmException ex ) {
+            LOGGER.log(Level.SEVERE, "Algoritmo no encontrado", ex);
+            throw ex;
+        }
     }
-
-    /* Devuelve el algoritmo de hash */
+    
     public String getAlgorithm () {
         return md.getAlgorithm();
     }
@@ -43,18 +44,21 @@ public final class Digester {
     public byte[] digest (final InputStream is) throws IOException {
     
       
-        try (DigestInputStream dis = new DigestInputStream( is, md )) {
+        try ( DigestInputStream dis = new DigestInputStream( is, md ) ) {
+            
             byte[] bytes = new byte[ 1024 * 8 ];
             
-            while ( dis.read( bytes ) != -1 ) {
-                
-            }
-        } catch ( Throwable t) {
-            LOGGER.setLevel(Level.INFO);
-            LOGGER.log(Level.SEVERE, "Fallo en fichero: %s{0}", t);
-            return null;
-        }
-        return md.digest();
+            while ( dis.read( bytes ) != -1 ) {}
+            
+            return md.digest();
+            
+        } catch ( final IOException ex ) {
+        
+            LOGGER.setLevel(Level.SEVERE);
+            LOGGER.log(Level.SEVERE, "Excepcion de E/S: %s{0}", ex);
+            throw ex;
+        
+        }        
     
   }
 
